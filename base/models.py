@@ -1,13 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
 import uuid
+from django.urls import reverse
 
 class Post(models.Model):
     id = models.UUIDField(primary_key=True,max_length=15,editable=False,default=uuid.uuid4)
-    title=models.CharField(max_length=250)
-    author=models.ForeignKey(User,on_delete=models.CASCADE)
-    body=models.TextField()
-    image=models.ImageField(upload_to='blog_images/',default='default_blog_image.jpg')
+    title = models.CharField(max_length=250)
+    slug = models.SlugField(max_length=250,unique_for_date='created', null=True,blank=True)
+    author = models.ForeignKey(User,on_delete=models.CASCADE)
+    body = models.TextField()
+    image = models.ImageField(upload_to='blog_images/',default='default_blog_image.jpg')
     category = models.CharField(max_length=150)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -17,6 +19,8 @@ class Post(models.Model):
         if self.image and hasattr(self.image, 'url'):
             return self.image.url
         
+    def get_absolute_url(self):
+        return reverse('read_post', args=[str(self.id),self.slug])
     class Meta:
         ordering=['-created']
         indexes=[models.Index(fields=['created'])]

@@ -3,8 +3,8 @@ from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.models import User
 from .models import UserProfile
 from base.models import Post
-
-
+from django.contrib.auth.decorators import login_required
+from .forms import UserProfileForm
 def user_login(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -69,4 +69,21 @@ def user_profile(request,username,id):
     user= User.objects.get(username=username,id=id)
     profile = UserProfile.objects.get(person=user)
     posts = Post.objects.filter(author=user)
-    return render(request,'profile.html',{'profile':profile , 'posts':posts})
+    return render(request,'profile.html',{
+        'profile':profile , 
+        'posts':posts
+    })
+    
+@login_required(login_url='login')  
+def update_profile(request,username,id):
+    user = User.objects.get(username=username, id=id)
+    profile = UserProfile.objects.get(person=user)
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=profile)
+        
+        if form.is_valid():
+            form.save()
+            return redirect('profile',username=user.username,id=user.id)
+    else:
+        form = UserProfileForm(instance=profile)
+    return render(request,'update_profile.html',{'form':form,'profile':profile})
