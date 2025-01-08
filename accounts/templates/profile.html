@@ -358,7 +358,7 @@
                 <!-- Edit Post -->
                  {% if post.author == user %}
                 <a
-                  href="create_post.html"
+                  href="{% url 'update_post' post.id%}"
                   class="text-emerald-600 rounded-xl hover:bg-emerald-100 p-2"
                   ><svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -377,7 +377,7 @@
                 </a>
                 <!-- Delete Post -->
                 <a
-                  href="delete.html"
+                  href="{% url 'delete_post' post.id%}"
                   class="text-red-600 p-2 rounded-xl hover:bg-red-100"
                 >
                 {% endif %}

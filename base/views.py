@@ -50,8 +50,9 @@ def home(request):
     
 def read_post(request,id,slug):
     post=Post.objects.get(id=id,slug=slug)
+    similar_post=Post.objects.filter(category=post.category)
     profile=UserProfile.objects.get(person=request.user)
-    return render(request,'post.html',{'post':post,'profile':profile})
+    return render(request,'post.html',{'post':post,'profile':profile , 'similar_post':similar_post})
 
 def update_post(request,id):
     post = Post.objects.get(id=id)
@@ -59,7 +60,16 @@ def update_post(request,id):
         form = PostForm(request.POST,instance=post)
         if form.is_valid():
             form.save()
-            return redirect('read_post',id=post.id,slug=post.slug)
+            return redirect('profile',username=post.author.username, id=post.author.id)
     else:
         form = PostForm(instance=post)
-        return
+        return render(request, 'update_post.html' , {'post':post, 'form':form})
+    
+def delete_post(request,id):
+    post=Post.objects.get(id=id)
+    if request.method=='POST':
+        post.delete()
+        return redirect('profile',username=post.author.username, id=post.author.id)
+    else:
+        return render(request, 'delete.html' , {'item':post,'type':'post'})
+    

@@ -483,36 +483,19 @@
         <div
           class="w-full h-[25vh] overflow-y-scroll scrollbar-hide rounded-sm shadow-md bg-white flex flex-col p-1"
         >
+        {% for s_post in similar_post %}
+        {% if s_post != post %}
           <a
-            href=""
+            href="{{s_post.get_absolute_url}}"
             class="w-full font-semibold text-base text-emerald-600 px-3 py-1 rounded-sm hover:underline"
-            >All About The Artemis Lunar Mission</a
+            >{{s_post.title|truncatewords:10}}</a
           >
-          <a
-            href=""
-            class="w-full font-semibold text-base text-emerald-600 px-3 py-1 rounded-sm hover:underline"
-            >All About The Artemis Lunar Mission</a
-          >
-          <a
-            href=""
-            class="w-full font-semibold text-base text-emerald-600 px-3 py-1 rounded-sm hover:underline"
-            >All About The Artemis Lunar Mission</a
-          >
-          <a
-            href=""
-            class="w-full font-semibold text-base text-emerald-600 px-3 py-1 rounded-sm hover:underline"
-            >All About The Artemis Lunar Mission</a
-          >
-          <a
-            href=""
-            class="w-full font-semibold text-base text-emerald-600 px-3 py-1 rounded-sm hover:underline"
-            >All About The Artemis Lunar Mission</a
-          >
-          <a
-            href=""
-            class="w-full font-semibold text-base text-emerald-600 px-3 py-1 rounded-sm hover:underline"
-            >All About The Artemis Lunar Mission</a
-          >
+          {% endif %}
+        {% empty %}
+        <p class='w-full font-semibold text-base text-emerald-600 px-3 py-1 rounded-sm hover:underline'>
+          No post by same category
+        </p>
+          {% endfor %}
         </div>
 
         <!-- Comment Form -->
